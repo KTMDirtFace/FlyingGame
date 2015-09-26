@@ -79,6 +79,12 @@ void AFlyingGamePawn::SetupPlayerInputComponent(class UInputComponent* InputComp
 	InputComponent->BindAxis("Thrust", this, &AFlyingGamePawn::ThrustInput);
 	InputComponent->BindAxis("MoveUp", this, &AFlyingGamePawn::MoveUpInput);
 	InputComponent->BindAxis("MoveRight", this, &AFlyingGamePawn::MoveRightInput);
+
+	// Bind controls to functions
+	InputComponent->BindAxis("Pitch", this, &AFlyingGamePawn::PitchInput);
+	InputComponent->BindAxis("Roll", this, &AFlyingGamePawn::RollInput);
+	InputComponent->BindAxis("Yaw", this, &AFlyingGamePawn::YawInput);
+	InputComponent->BindAxis("Throttle", this, &AFlyingGamePawn::ThrottleInput);
 }
 
 void AFlyingGamePawn::ThrustInput(float Val)
@@ -122,4 +128,24 @@ void AFlyingGamePawn::MoveRightInput(float Val)
 
 	// Smoothly interpolate roll speed
 	CurrentRollSpeed = FMath::FInterpTo(CurrentRollSpeed, TargetRollSpeed, GetWorld()->GetDeltaSeconds(), 2.f);
+}
+
+void AFlyingGamePawn::PitchInput(float Val)
+{
+
+}
+
+void AFlyingGamePawn::RollInput(float Val)
+{
+
+}
+
+void AFlyingGamePawn::YawInput(float Val)
+{
+
+}
+
+void AFlyingGamePawn::ThrottleInput(float Val)
+{
+	
 }

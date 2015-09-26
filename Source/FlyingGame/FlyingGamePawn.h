@@ -43,10 +43,16 @@ protected:
 	void MoveRightInput(float Val);
 
 	/** Bound to the Pitch Input - Elevator */
-//	void PitchInput(float Val);
+	void PitchInput(float Val);
 
 	/** Bound to the roll input - Aeleron */
-//	void RollInput(float Val);
+	void RollInput(float Val);
+
+	/** Bound to the yaw input - Rudder */
+	void YawInput(float Val);
+
+	/** Bound to the throttle input - Throttle */
+	void ThrottleInput(float Val);
 
 private:
 
