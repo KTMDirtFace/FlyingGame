@@ -19,7 +19,7 @@ AFlyingGamePawn::AFlyingGamePawn()
 	// Create static mesh component
 	PlaneMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlaneMesh0"));
 	PlaneMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
-	RootComponent = PlaneMesh;f
+	RootComponent = PlaneMesh;
 
 	// Create a spring arm component
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm0"));

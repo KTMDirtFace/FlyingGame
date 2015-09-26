@@ -42,6 +42,12 @@ protected:
 	/** Bound to the horizontal axis */
 	void MoveRightInput(float Val);
 
+	/** Bound to the Pitch Input - Elevator */
+//	void PitchInput(float Val);
+
+	/** Bound to the roll input - Aeleron */
+//	void RollInput(float Val);
+
 private:
 
 	/** How quickly forward speed changes */
