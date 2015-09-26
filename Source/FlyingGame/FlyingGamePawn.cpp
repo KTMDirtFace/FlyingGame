@@ -38,8 +38,8 @@ AFlyingGamePawn::AFlyingGamePawn()
 	Acceleration = 500.f;
 	TurnSpeed = 50.f;
 	MaxSpeed = 4000.f;
-	MinSpeed = 500.f;
-	CurrentForwardSpeed = 500.f;
+	MinSpeed = 0;
+	CurrentForwardSpeed = 0;
 }
 
 void AFlyingGamePawn::Tick(float DeltaSeconds)
