@@ -153,6 +153,7 @@ void AFlyingGamePawn::ThrottleInput(float Val)
 			{
 				// draw the force
 				DrawDebugDirectionalArrow(GWorld, centerOfMass, centerOfMass + force, 20, FColor::Blue, false, -1.0f, 0, 3.0f );
+				DrawDebugSphere(GWorld, centerOfMass, 50, 10, FColor::Yellow);
 			}
 		}
 
