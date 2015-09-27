@@ -42,6 +42,8 @@ AFlyingGamePawn::AFlyingGamePawn()
 	MinSpeed = 0;
 	CurrentForwardSpeed = 0;
 	CurrentThrottle = 0;
+
+	DebugDraw = false;
 }
 
 void AFlyingGamePawn::Tick(float DeltaSeconds)
@@ -138,7 +140,7 @@ void AFlyingGamePawn::ThrottleInput(float Val)
 	{
 		FVector centerOfMass = mesh->GetCenterOfMass();
 
-		FVector force = FVector(0.f, 0.f, Val * 100000 * 3);
+		FVector force = FVector(0.f, 0.f, Val * 100000 * 4);
 		FTransform myTransform = this->GetTransform();
 		// transform force into the right space
 		force = myTransform.TransformFVector4(force);
@@ -147,8 +149,11 @@ void AFlyingGamePawn::ThrottleInput(float Val)
 		{
 			mesh->AddForceAtLocation(force, centerOfMass);
 
-			// draw the force
-			DrawDebugDirectionalArrow(GWorld, centerOfMass, centerOfMass + force, 20, FColor::Blue);
+			if (DebugDraw)
+			{
+				// draw the force
+				DrawDebugDirectionalArrow(GWorld, centerOfMass, centerOfMass + force, 20, FColor::Blue, false, -1.0f, 0, 3.0f );
+			}
 		}
 
 	}

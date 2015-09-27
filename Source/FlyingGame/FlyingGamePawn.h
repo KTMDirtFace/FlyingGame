@@ -78,6 +78,8 @@ private:
 	/** Current Throttle */
 	float CurrentThrottle;
 
+	UPROPERTY(Category = Debug, EditAnywhere)
+	bool DebugDraw;
 public:
 	/** Returns PlaneMesh subobject **/
 	FORCEINLINE class UStaticMeshComponent* GetPlaneMesh() const { return PlaneMesh; }
