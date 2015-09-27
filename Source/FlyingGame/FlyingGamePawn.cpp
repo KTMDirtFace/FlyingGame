@@ -138,7 +138,7 @@ void AFlyingGamePawn::ThrottleInput(float Val)
 	{
 		FVector centerOfMass = mesh->GetCenterOfMass();
 
-		FVector force = FVector(0.f, 0.f, Val * 100000 * 2);
+		FVector force = FVector(0.f, 0.f, Val * 100000 * 3);
 		FTransform myTransform = this->GetTransform();
 		// transform force into the right space
 		force = myTransform.TransformFVector4(force);
