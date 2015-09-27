@@ -2,6 +2,7 @@
 
 #include "FlyingGame.h"
 #include "FlyingGamePawn.h"
+#include "DrawDebugHelpers.h"
 
 AFlyingGamePawn::AFlyingGamePawn()
 {
@@ -130,7 +131,28 @@ void AFlyingGamePawn::YawInput(float Val)
 
 void AFlyingGamePawn::ThrottleInput(float Val)
 {
+	//  Doing some testing here.
+	UPrimitiveComponent *mesh = Cast<UPrimitiveComponent>(this->GetComponentByClass(UPrimitiveComponent::StaticClass()));
 
+	if (mesh)
+	{
+		FVector centerOfMass = mesh->GetCenterOfMass();
+
+		FVector force = FVector(0.f, 0.f, Val * 100000 * 2);
+		FTransform myTransform = this->GetTransform();
+		// transform force into the right space
+		force = myTransform.TransformFVector4(force);
+
+		if (Val > 0 )
+		{
+			mesh->AddForceAtLocation(force, centerOfMass);
+
+			// draw the force
+			DrawDebugDirectionalArrow(GWorld, centerOfMass, centerOfMass + force, 20, FColor::Blue);
+		}
+
+	}
+//	USkeletalMeshComponent* SkeletalMeshComp = Cast<USkeletalMeshComponent>(Actor->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 	/*
 	// Is there no input?
 	bool bHasInput = !FMath::IsNearlyEqual(Val, 0.f);
