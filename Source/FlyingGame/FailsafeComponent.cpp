@@ -4,7 +4,7 @@
 #include "FailsafeComponent.h"
 
 
-#pragma optimize("", off)
+//#pragma optimize("", off)
 
 // Sets default values for this component's properties
 UFailsafeComponent::UFailsafeComponent()
@@ -15,6 +15,10 @@ UFailsafeComponent::UFailsafeComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	bEnableFailsafe = true;
+	CollisionSecondsBack = 2.0f;
+	CollisionGrindLimitCount = 10;
+
 	m_targetSpeed = 0.0f;
 	m_actualSpeed = 0.0f;
 
@@ -26,13 +30,16 @@ UFailsafeComponent::UFailsafeComponent()
 
 void UFailsafeComponent::NotifyHit(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Reset the collision hit timer
-	m_timeSinceLastCollision = 0.0f;
+	if (bEnableFailsafe)
+	{
+		// Reset the collision hit timer
+		m_timeSinceLastCollision = 0.0f;
 
-	// update the Circular History Buffer
-	TCircularBuffer<float> &historyBuffer = *m_collisionHistoryBuffer;
-	historyBuffer[m_collisionHistoryIndex] = GWorld->GetTimeSeconds();
-	m_collisionHistoryIndex = historyBuffer.GetNextIndex(m_collisionHistoryIndex);
+		// update the Circular History Buffer
+		TCircularBuffer<float> &historyBuffer = *m_collisionHistoryBuffer;
+		historyBuffer[m_collisionHistoryIndex] = GWorld->GetTimeSeconds();
+		m_collisionHistoryIndex = historyBuffer.GetNextIndex(m_collisionHistoryIndex);
+	}
 }
 
 // Called when the game starts
@@ -51,9 +58,44 @@ void UFailsafeComponent::TickComponent( float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
 	// ...
-
-	// Update Time Since Last Collision Counter
-	m_timeSinceLastCollision += DeltaTime;
+	if (bEnableFailsafe)
+	{
+		// Update Time Since Last Collision Counter
+		m_timeSinceLastCollision += DeltaTime;
+	}
 }
 
-#pragma optimize("", on)
+bool UFailsafeComponent::IsGridingOnCollision() const
+{
+	bool grinding = false;
+
+	int hits = GetNumHits(CollisionSecondsBack);
+	if (hits > CollisionGrindLimitCount)
+		grinding = true;
+
+	return grinding;
+}
+
+int UFailsafeComponent::GetNumHits(float secondsBack) const
+{
+	int hits = 0;
+
+	float currentWorldTime = GWorld->GetTimeSeconds();
+	TCircularBuffer<float> &historyBuffer = *m_collisionHistoryBuffer;
+
+	for (uint32 i = 0; i < historyBuffer.Capacity(); i++)
+	{
+		if (historyBuffer[i] > 0)
+		{
+			float timeDiffrence = currentWorldTime - historyBuffer[i];
+			if (timeDiffrence <= secondsBack)
+			{
+				hits++;
+			}
+		}
+	}
+
+	return hits;
+}
+
+//#pragma optimize("", on)
