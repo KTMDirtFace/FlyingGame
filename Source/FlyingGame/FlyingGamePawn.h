@@ -19,6 +19,10 @@ class AFlyingGamePawn : public APawn
 	/** Camera component that will be our viewpoint */
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;
+
+	/** Failsafe Component */
+	UPROPERTY(Category = Failsafe, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UFailsafeComponent* FailsafeComponent;
 public:
 	AFlyingGamePawn();
 

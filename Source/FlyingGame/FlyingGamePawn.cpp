@@ -3,6 +3,7 @@
 #include "FlyingGame.h"
 #include "FlyingGamePawn.h"
 #include "DrawDebugHelpers.h"
+#include "FailsafeComponent.h"
 
 AFlyingGamePawn::AFlyingGamePawn()
 {
@@ -35,6 +36,9 @@ AFlyingGamePawn::AFlyingGamePawn()
 	Camera->AttachTo(SpringArm, USpringArmComponent::SocketName);
 	Camera->bUsePawnControlRotation = false; // Don't rotate camera with controller
 
+	// Create FailsafeComponent.
+	FailsafeComponent = CreateDefaultSubobject<UFailsafeComponent>(TEXT("FailsafeComponent0"));
+
 	// Set handling parameters
 	Acceleration = 500.f;
 	TurnSpeed = 50.f;
@@ -63,6 +67,17 @@ void AFlyingGamePawn::Tick(float DeltaSeconds)
 	// Rotate plane
 	AddActorLocalRotation(DeltaRotation);
 
+	// Debug Draw Test Stuff
+	if (DebugDraw)
+	{
+		FVector upVec = this->GetActorUpVector();
+		FVector myLoc = this->GetActorLocation();
+		FVector endLoc = myLoc + (upVec * 1000);
+		// Is It rendering behind because of the spring arm?
+
+//		DrawDebugDirectionalArrow(GWorld, myLoc, endLoc , 20, FColor::Red, false, -1.0f, 0, 8.0f);
+	}
+
 	// Call any parent class Tick implementation
 	Super::Tick(DeltaSeconds);
 }
@@ -73,6 +88,11 @@ void AFlyingGamePawn::NotifyHit(class UPrimitiveComponent* MyComp, class AActor*
 
 	// Set velocity to zero upon collision
 	CurrentForwardSpeed = 0.f;
+
+	if (FailsafeComponent)
+	{
+		FailsafeComponent->NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	}
 }
 
 
@@ -152,7 +172,7 @@ void AFlyingGamePawn::ThrottleInput(float Val)
 			if (DebugDraw)
 			{
 				// draw the force
-				DrawDebugDirectionalArrow(GWorld, centerOfMass, centerOfMass + force, 20, FColor::Blue, false, -1.0f, 0, 3.0f );
+ 				DrawDebugDirectionalArrow(GWorld, centerOfMass, centerOfMass + force, 20, FColor::Blue, false, -1.0f, 0, 3.0f );
 				DrawDebugSphere(GWorld, centerOfMass, 50, 10, FColor::Yellow);
 			}
 		}
